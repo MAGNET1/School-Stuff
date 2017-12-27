@@ -1,54 +1,63 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <conio.h>
+#include <stdlib.h>
 
 #include "Ksiegarnia.h"
 
 using namespace std;
 
-vector <Ksiazka_Sportowa*> vKsiazka_Sportowa;
-vector <Ksiazka_Kucharska*> vKsiazka_Kucharska;
-
-void DodajNowaKsiazke(Menu_Wybor *x)
-{
-   x -> Uzupelnij_Dane();
-}
-
 
 int main()
 {
 	Menu m1;
-	switch(m1.PobierzOpcje())
+	vector <Factory*> vKsiazka;
+	while (1)
 	{
-		case 1:
+		m1.MainMenu();
+		switch(m1.PobierzOpcje())
 		{
-			Menu_NowaKsiazka n1;
-			Menu_Wybor * wybor;
-			switch(n1.PobierzOpcje())
+			case 0:	break;
+			
+			case 1:
 			{
-				case 1:
+				m1.DodajKsiazkeMenu();
+				int wybor = m1.PobierzOpcje();
+				if(wybor == 0 || wybor > 2) // 
 				{
-					Ksiazka_Sportowa s1;
-					wybor = &s1;
-					DodajNowaKsiazke(wybor);
+					cout << endl << "Wybrano niewlasciwa opcje! Powrot do menu glownego...";
+					_getch();
 					break;
 				}
-				case 2:
-				{
-					Ksiazka_Kucharska k1;
-					wybor = &k1;
-					DodajNowaKsiazke(wybor);
-					break;
-				}
+				vKsiazka.push_back(Factory::StworzKsiazke(wybor));
+				vKsiazka[vKsiazka.size()-1]->Uzupelnij_Dane();
+				break;
 			}
-			break;
+			//tutaj jeszcze case 2...
+			case 3:
+			{
+				int i;
+				int x=0;
+				system("cls");
+				cout << "Wykaz ksiazek: " << endl;
+				for(i=0;i<vKsiazka.size();i++)
+				{
+					vKsiazka[i]->Informacje();
+					x++;
+				}
+				cout << "Ilosc ksiazek: " << x;
+				_getch();
+				break;
+			}
+			default:
+			{
+				cout << endl << "Wybrano niewlasciwa opcje! Sprobuj ponownie...";
+				_getch();
+				break;
+			}
 		}
-		default:
-		{
-			cout << endl << "Wybrano niewlasciwa opcje! Sprobuj ponownie...";
-			main();
-			break;
-		}
+		if(m1.PobierzOpcje() == 0)	break;
 	}
 	
 }

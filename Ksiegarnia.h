@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <conio.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -9,36 +11,27 @@ class Menu
 	int opt;
 	
 	public:
-	Menu();
+	Menu(int x=0);
 	~Menu();
 	
 	int PobierzOpcje()
 	{
 		return opt;
 	}
+	void MainMenu();
+	void DodajKsiazkeMenu();
 };
 
-class Menu_Wybor
+class Factory
 {
 public:
+	static Factory * StworzKsiazke(int wybor);
 	virtual void Uzupelnij_Dane()=0;
+	virtual void Informacje() = 0;
 };
 
-class Menu_NowaKsiazka
-{
-	int opt;
-	
-public:
-	Menu_NowaKsiazka();
-	~Menu_NowaKsiazka();
-	
-	int PobierzOpcje()
-	{
-		return opt;
-	}
-};
 
-class Ksiazka : public Menu_Wybor
+class Ksiazka : public Factory
 {
 	protected:
 	string nazwa;
@@ -59,6 +52,7 @@ public:
 	Ksiazka(string n="Brak Tytulu", string a="Brak Autora", int x=0, int i=0);
 	~Ksiazka();
 	void Uzupelnij_Dane();
+	void Informacje();
 };
 
 class Ksiazka_Sportowa : public Ksiazka
@@ -77,6 +71,7 @@ public:
 	~Ksiazka_Sportowa();
 	
 	void Uzupelnij_Dane();
+	void Informacje();
 };
 
 class Ksiazka_Kucharska : public Ksiazka
@@ -90,4 +85,5 @@ public:
 	~Ksiazka_Kucharska();
 	
 	void Uzupelnij_Dane();
+	void Informacje();
 };
