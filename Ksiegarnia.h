@@ -6,6 +6,18 @@
 
 using namespace std;
 
+class Portfel
+{
+	int kasa;
+	
+public:
+	Portfel(int=0);
+	float StanPortfela()	{return kasa;}
+	void PortfelUpdate(int i)	{kasa=i;}
+	void Budzet();
+	void WyswietlStanKonta();
+};
+
 class Menu
 {
 	int opt;
@@ -18,26 +30,26 @@ class Menu
 	{
 		return opt;
 	}
-	void MainMenu();
+	void MainMenu(float);
 	void DodajKsiazkeMenu();
 };
 
-class Factory
-{
-public:
-	static Factory * StworzKsiazke(int wybor);
-	virtual void Uzupelnij_Dane()=0;
-	virtual void Informacje() = 0;
-};
-
-
-class Ksiazka : public Factory
+class Ksiazka
 {
 	protected:
 	string nazwa;
 	string autor;
 	int ilosc_stron;
 	int ilosc_sztuk;
+	
+public:
+	Ksiazka(string n="Brak Tytulu", string a="Brak Autora", int x=0, int i=0);
+	~Ksiazka();
+	virtual void Uzupelnij_Dane();
+	virtual void Informacje();
+	virtual void InformacjePodstawowe();
+	virtual void Usun();
+	static Ksiazka * StworzKsiazke(int wybor);
 	
 	int IleSztuk()
 	{
@@ -47,12 +59,6 @@ class Ksiazka : public Factory
 	{
 		ilosc_sztuk = x;
 	}
-	
-public:
-	Ksiazka(string n="Brak Tytulu", string a="Brak Autora", int x=0, int i=0);
-	~Ksiazka();
-	void Uzupelnij_Dane();
-	void Informacje();
 };
 
 class Ksiazka_Sportowa : public Ksiazka
@@ -68,10 +74,21 @@ public:
 		ilosc_cwiczen = y;
 	}
 	
+	int IleSztuk()
+	{
+		return ilosc_sztuk;
+	}
+	void SztukiUpdate(int x)
+	{
+		ilosc_sztuk = x;
+	}
+	
 	~Ksiazka_Sportowa();
 	
 	void Uzupelnij_Dane();
 	void Informacje();
+	void InformacjePodstawowe();
+	void Usun();
 };
 
 class Ksiazka_Kucharska : public Ksiazka
@@ -84,6 +101,17 @@ public:
 	Ksiazka_Kucharska(string ="", string a="", int x=0, int i=0, string h="Nieznana", string k="Nieznane", int y=0);
 	~Ksiazka_Kucharska();
 	
+	int IleSztuk()
+	{
+		return ilosc_sztuk;
+	}
+	void SztukiUpdate(int x)
+	{
+		ilosc_sztuk = x;
+	}
+	
 	void Uzupelnij_Dane();
 	void Informacje();
+	void InformacjePodstawowe();
+	void Usun();
 };

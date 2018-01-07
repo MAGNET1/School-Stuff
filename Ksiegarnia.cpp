@@ -78,9 +78,10 @@ Menu::Menu(int x)
 	x=opt;
 }
 
-void Menu::MainMenu()
+void Menu::MainMenu(float portfel)
 {
 	system("cls");
+	cout << "Stan portfela: " << portfel << "zl" << endl;
 	cout << "Co chcesz zrobic (0 - wyjscie):" << endl;
 	cout << "1. Dodaj Ksiazke" << endl;
 	cout << "2. Kup Ksiazke" << endl;
@@ -103,10 +104,24 @@ Menu::~Menu()
 {
 	
 }
-Factory * Factory::StworzKsiazke(int wybor)
+Ksiazka * Ksiazka::StworzKsiazke(int wybor)
 {
 	if(wybor == 1)	return new Ksiazka_Sportowa;
 	else	return new Ksiazka_Kucharska;
+}
+void Ksiazka::InformacjePodstawowe()
+{
+	cout << nazwa << " [" << autor << "] (" << ilosc_sztuk << ")";
+}
+void Ksiazka_Sportowa::InformacjePodstawowe()
+{
+	Ksiazka::InformacjePodstawowe();
+	cout << " <Ksiazka Sportowa>" << endl;
+}
+void Ksiazka_Kucharska::InformacjePodstawowe()
+{
+	Ksiazka::InformacjePodstawowe();
+	cout << " <Ksiazka Kucharska>" << endl;
 }
 void Ksiazka::Informacje()
 {
@@ -128,4 +143,30 @@ void Ksiazka_Kucharska::Informacje()
 	cout << "Historia kucharza: " << Historia_Kucharza << endl;
 	cout << "Kategorie: " << kategorie << endl;
 	cout << "Ilosc przepisow: " << ilosc_przepisow << endl;
+}
+void Ksiazka::Usun()
+{
+	delete this;
+}
+void Ksiazka_Kucharska::Usun()
+{
+	delete this;
+}
+void Ksiazka_Sportowa::Usun()
+{
+	delete this;
+}
+
+Portfel::Portfel(int x)
+{
+	kasa = x;
+}
+void Portfel::Budzet()
+{
+	cout << "Podaj Twoj stan portfela: ";
+	cin >> kasa;
+}
+void Portfel::WyswietlStanKonta()
+{
+	cout << "Stan twojego portfela: " << kasa << "zl" << endl;
 }
