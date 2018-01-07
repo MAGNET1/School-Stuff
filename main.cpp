@@ -3,13 +3,59 @@
 #include <limits>
 #include <conio.h>
 #include <stdlib.h>
-#include <memory>
+#include <iomanip>
+#include <fstream>
+#include <sstream>
 
 #include "Ksiegarnia.h"
 
 using namespace std;
 
 vector <Ksiazka*> vKsiazka;
+
+#include "funcs.h"
+
+void ZapiszDoPliku(string data, int typ)
+{
+	ofstream p("Ksiazki.txt", ios::app);
+	if(p.is_open())
+	{
+		p << data << "\n";
+		cout << endl << "Pomyslnie zapisano ksiazke do bazy!";
+		_getch();
+	}
+	else
+	{
+		cout << "Nie udalo sie zapisac ksiazki do bazy!";
+		_getch();
+	}
+}
+void PobierzKsiazki()
+{
+	string line;
+	int x=0;
+	
+	ifstream p("Ksiazki.txt");
+	
+	if(p.is_open())
+	{
+		while(getline(p, line))
+		{
+			x++;
+			int id = vKsiazka.size();
+			int x = atoi(magic(line, '|', 0).c_str()); //id rodzaju ksiazki
+			vKsiazka.push_back(Ksiazka::StworzKsiazke(x));
+			vKsiazka[id]->SzybkieDodawanie(line);
+			
+		}
+		p.close();
+	}
+  else cout << "Unable to open file"; 
+  
+  cout << "Z bazy pobrano " << x << " ksiazek!";
+  _getch();
+  system("cls");
+}
 
 int WyswietlListe()
 {
@@ -28,6 +74,8 @@ int WyswietlListe()
 
 int main()
 {
+	PobierzKsiazki();
+	cout << fixed << setprecision(2);
 	Portfel p;
 	p.Budzet();
 	Menu m1;
@@ -41,10 +89,8 @@ int main()
 				unsigned int i;
 				for(i=0;i<vKsiazka.size();i++)
 				{
-					Ksiazka * temp = vKsiazka[i];
+					vKsiazka[i]->Usun();
 					vKsiazka.erase(vKsiazka.begin()+i);
-					//temp->Usun();
-					delete temp;
 				}
 				break;
 			}
@@ -53,22 +99,28 @@ int main()
 			{
 				m1.DodajKsiazkeMenu();
 				int wybor = m1.PobierzOpcje();
-				if(wybor == 0 || wybor > 2) // 
+				if(wybor == 0 || wybor > 4) // 
 				{
 					cout << endl << "Wybrano niewlasciwa opcje! Powrot do menu glownego...";
 					_getch();
 					break;
 				}
-				unique_ptr<Ksiazka*> temp2;
 				vKsiazka.push_back(Ksiazka::StworzKsiazke(wybor));
 				vKsiazka[vKsiazka.size()-1]->Uzupelnij_Dane();
 				break;
 			}
 			case 2:
 			{
+				if(!vKsiazka.size())
+				{
+					system("cls");
+					cout << "Brak ksiazek! Wroc tu pozniej!";
+					_getch();
+					break;
+				}
 				WyswietlListe();
 				unsigned int wybor;
-				cout << endl << "Ktora ksiazke chcialbys kupic (0 - menu glowne) ?" << endl << "Twoj wybor: ";
+				cout << endl << "Stan portfela: " << p.StanPortfela() << endl << "Ktora ksiazke chcialbys kupic (0 - menu glowne) ?" << endl << "Twoj wybor: ";
 				cin >> wybor;
 				if(wybor == 0 || wybor > vKsiazka.size())
 				{
@@ -84,28 +136,46 @@ int main()
 					_getch();
 					break;
 				}
-				int wybor2;
-				cout << "Czy chcesz kupic te ksiazke?" << endl;
-				cout << "1. Tak, biore" << endl;
-				cout << "2. Nie, zmienilem zdanie..." << endl;
-				cout << "Twoj wybor: ";
-				cin >> wybor2;
-				if(wybor2 != 1)
+				if(vKsiazka[wybor]->CenaKsiazki() > p.StanPortfela())
+				{
+					cout << "Nie masz wystarczajaco duzo pieniedzy na zakup!";
+					_getch();
+					break;
+				}
+				m1.TakNieMenu();
+				if(m1.PobierzOpcjeTakNie() != 1)
 				{
 					cout << endl << "Powrot do wykazu...";
 					_getch();
 					continue;
 				}
 				vKsiazka[wybor]->SztukiUpdate(vKsiazka[wybor]->IleSztuk()-1);
+				p.PortfelUpdate(p.StanPortfela()-vKsiazka[wybor]->CenaKsiazki());
 				cout << endl << "Pomyslnie dokonano zakupu ksiazki!";
 				_getch();
 				break;
 			}
 			case 3:
 			{
-				int x = WyswietlListe();
-				cout << endl << "Ilosc ksiazek: " << x;
-				_getch();
+				if(!vKsiazka.size())
+				{
+					system("cls");
+					cout << "Brak ksiazek! Wroc tu pozniej!";
+					_getch();
+					break;
+				}
+				int wybor=1;
+				while(1)
+				{
+					cout << endl << "Ilosc ksiazek: " << vKsiazka.size();
+					WyswietlListe();
+					cout << "Aby przeczytac o ksiazce, wybierz jej numer. Menu glowne - 0" << endl;
+					cout << "Twoj wybor: ";
+					cin >> wybor;
+					if(wybor == 0)	break;
+					vKsiazka[--wybor]->Informacje();
+					_getch();
+				}
 				break;
 			}
 			default:
@@ -119,4 +189,3 @@ int main()
 	}
 	
 }
-
