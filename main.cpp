@@ -29,6 +29,7 @@ void ZapiszDoPliku(string data, int typ)
 		cout << "Nie udalo sie zapisac ksiazki do bazy!";
 		_getch();
 	}
+	p.close();
 }
 void PobierzKsiazki()
 {
@@ -77,11 +78,29 @@ int main()
 	PobierzKsiazki();
 	cout << fixed << setprecision(2);
 	Portfel p;
-	p.Budzet();
+	try
+	{
+		p.Budzet();
+	}
+	catch(string w)
+	{
+		cout << w << endl << endl;
+		return 0;
+	}
 	Menu m1;
 	while (1)
 	{
-		m1.MainMenu(p.StanPortfela());
+		try
+		{
+			m1.MainMenu(p.StanPortfela());
+		}
+		catch(string w)
+		{
+			cout << w;
+			_getch();
+			continue;
+		}
+		
 		switch(m1.PobierzOpcje())
 		{
 			case 0:
@@ -97,7 +116,16 @@ int main()
 			
 			case 1:
 			{
-				m1.DodajKsiazkeMenu();
+				try
+				{
+					m1.DodajKsiazkeMenu();
+				}
+				catch(string w)
+				{
+					cout << w;
+					_getch();
+					break;
+				}
 				int wybor = m1.PobierzOpcje();
 				if(wybor == 0 || wybor > 4) // 
 				{
@@ -106,7 +134,16 @@ int main()
 					break;
 				}
 				vKsiazka.push_back(Ksiazka::StworzKsiazke(wybor));
-				vKsiazka[vKsiazka.size()-1]->Uzupelnij_Dane();
+				try
+				{
+					vKsiazka[vKsiazka.size()-1]->Uzupelnij_Dane();
+				}
+				catch(string w)
+				{
+					cout << w;
+					_getch();
+					vKsiazka.erase(vKsiazka.begin()+(vKsiazka.size()-1));
+				}
 				break;
 			}
 			case 2:

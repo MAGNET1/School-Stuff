@@ -16,6 +16,7 @@ Ksiazka::~Ksiazka()
 
 void Ksiazka::Uzupelnij_Dane()
 {
+	string wyjatek;
 	system("cls");
 	cout << "Podaj nazwe ksiazki: ";
 	getline(cin, nazwa);
@@ -23,10 +24,25 @@ void Ksiazka::Uzupelnij_Dane()
 	getline(cin, autor);
 	cout << endl << "Podaj ilosc stron: ";
 	cin >> ilosc_stron;
+	if(ilosc_stron < 1)
+	{
+		wyjatek= "Niepoprawna ilosc stron!";
+		throw wyjatek;
+	}
 	cout << endl << "Ilosc sztuk: ";
 	cin >> ilosc_sztuk;
+	if(ilosc_sztuk < 0)
+	{
+		wyjatek = "Niepoprawna ilosc sztuk!";
+		throw wyjatek;
+	}
 	cout << endl << "Podaj cene: ";
 	cin >> cena;
+	if(cena < 0)
+	{
+		wyjatek = "Niepoprawna cena!";
+		throw wyjatek;
+	}
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // na stdin zakolejkowany jest znak końca linii. Dzieki temu pomijam ten znak
 }
 
@@ -53,11 +69,17 @@ Ksiazka_Sportowa::~Ksiazka_Sportowa()
 
 void Ksiazka_Sportowa::Uzupelnij_Dane()
 {
+	string wyjatek;
 	Ksiazka::Uzupelnij_Dane();
 	cout << endl << "Opis skutecznosci treningow: ";
 	getline(cin, Skutecznosc_Treningow);
 	cout << endl << "Ilosc cwiczen: ";
 	cin >> ilosc_cwiczen;
+	if(ilosc_cwiczen < 1)
+	{
+		wyjatek = "Ksiazka musi zawierac przynajmniej 1 trening!";
+		throw wyjatek;
+	}
 	
 	ostringstream stringStream;
 	stringStream << "1|"<<nazwa<<"|"<<autor<<"|"<<ilosc_stron<<"|"<<ilosc_sztuk<<"|"<<cena<<"|"<<Skutecznosc_Treningow<<"|"<<ilosc_cwiczen;
@@ -91,6 +113,7 @@ Ksiazka_Kucharska::~Ksiazka_Kucharska()
 
 void Ksiazka_Kucharska::Uzupelnij_Dane()
 {
+	string wyjatek;
 	Ksiazka::Uzupelnij_Dane();
 	cout << endl << "Podaj historie kucharza: ";
 	getline(cin, Historia_Kucharza);
@@ -100,6 +123,11 @@ void Ksiazka_Kucharska::Uzupelnij_Dane()
 	//cin >> kategorie;
 	cout << endl << "Ilsoc przepisow: ";
 	cin >> ilosc_przepisow;
+	if(ilosc_przepisow < 1)
+	{
+		wyjatek = "Ksiazka musi zawierac jakies przepisy!";
+		throw wyjatek;
+	}
 	
 	std::ostringstream stringStream;
 	stringStream << "2|"<<nazwa<<"|"<<autor<<"|"<<ilosc_stron<<"|"<<ilosc_sztuk<<"|"<<cena<<"|"<<Historia_Kucharza<<"|"<<kategorie<<"|"<<ilosc_przepisow;
@@ -217,6 +245,11 @@ void Menu::MainMenu(float portfel)
 	cout << "3. Lista Ksiazek" << endl;
 	cout << "Twoja wybor: ";
 	cin >> opt;
+	if(opt > 3 || opt < 0)
+	{
+		string wyjatek = "Niepoprawna opcja w menu!";
+		throw wyjatek;
+	}
 }
 void Menu::DodajKsiazkeMenu()
 {
@@ -228,6 +261,11 @@ void Menu::DodajKsiazkeMenu()
 	cout << "4. Psychologiczna" << endl;
 	cout << "Twoj wybor: ";
 	cin >> opt;
+	if(opt > 4 || opt < 1)
+	{
+		string wyjatek = "Niepoprawna opcja!";
+		throw wyjatek;
+	}
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // na stdin zakolejkowany jest znak końca linii. Dzieki temu pomijam ten znak
 }
 
@@ -358,6 +396,11 @@ void Portfel::Budzet()
 {
 	cout << "Podaj Twoj stan portfela: ";
 	cin >> kasa;
+	if(kasa < 0)
+	{
+		string wyjatek = "Nie mozna podawac ujemnych wartosci!";
+		throw wyjatek;
+	}
 }
 void Portfel::WyswietlStanKonta()
 {
