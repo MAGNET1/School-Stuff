@@ -1,4 +1,22 @@
 #include "Ksiazka_Kucharska.h"
+#include "Wyjatki.h"
+
+template <typename T>
+T input()
+{
+	T d;
+	string line;
+	cin.clear();
+	cin.sync();
+	while(getline(cin, line))
+	{
+		stringstream sLine(line);
+		if (sLine >> d && sLine.eof())	break;
+		throw InputException("Nieprawidlowy typ danych. Sprobuj ponownie!");
+	}
+	return d;
+}
+
 
 Ksiazka_Kucharska::Ksiazka_Kucharska(string n, string a, int x, int i, float c, string h, string k, int y)
 :Ksiazka(n, a, x, i, c)
@@ -24,11 +42,10 @@ void Ksiazka_Kucharska::Uzupelnij_Dane()
 	getline(cin, kategorie);
 	//cin >> kategorie;
 	cout << endl << "Ilsoc przepisow: ";
-	cin >> ilosc_przepisow;
+	ilosc_przepisow = input<int>();
 	if(ilosc_przepisow < 1)
 	{
-		wyjatek = "Ksiazka musi zawierac jakies przepisy!";
-		throw wyjatek;
+		throw IncorrectNumber("Ksiazka musi zawierac jakies przepisy!");
 	}
 	
 	std::ostringstream stringStream;

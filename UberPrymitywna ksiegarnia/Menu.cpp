@@ -1,4 +1,21 @@
 #include "Menu.h"
+#include "Wyjatki.h"
+
+template <typename T>
+T input()
+{
+	T d;
+	string line;
+	cin.clear();
+	cin.sync();
+	while(getline(cin, line))
+	{
+		stringstream sLine(line);
+		if (sLine >> d && sLine.eof())	break;
+		throw InputException("Nieprawidlowy typ danych. Sprobuj ponownie!");
+	}
+	return d;
+}
 
 Menu::Menu(int x)
 {
@@ -12,12 +29,13 @@ void Menu::MainMenu(float portfel)
 	cout << "1. Dodaj Ksiazke" << endl;
 	cout << "2. Kup Ksiazke" << endl;
 	cout << "3. Lista Ksiazek" << endl;
+	cout << "4. Sortuj Ksiazki" << endl;
 	cout << "Twoja wybor: ";
-	cin >> opt;
-	if(opt > 3 || opt < 0)
+	opt = input<int>();
+	
+	if(opt > 4 || opt < 0)
 	{
-		string wyjatek = "Niepoprawna opcja w menu!";
-		throw wyjatek;
+		throw IncorrectNumber("Wybrano niepoprawna opcje z menu!");
 	}
 }
 void Menu::DodajKsiazkeMenu()
@@ -29,13 +47,26 @@ void Menu::DodajKsiazkeMenu()
 	cout << "3. Przygodowa" << endl;
 	cout << "4. Psychologiczna" << endl;
 	cout << "Twoj wybor: ";
-	cin >> opt;
+	opt = input<int>();
 	if(opt > 4 || opt < 1)
 	{
-		string wyjatek = "Niepoprawna opcja!";
-		throw wyjatek;
+		throw IncorrectNumber("Niepoprawna opcja!");
 	}
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // na stdin zakolejkowany jest znak końca linii. Dzieki temu pomijam ten znak
+}
+
+void Menu::SortujMenu()
+{
+	system("cls");
+	cout << "Jak chcesz posortowac ksiazki:" << endl;
+	cout << "1. Sortuj wedlug nazwy" << endl;
+	cout << "2. Sortuj wedlug ilosc sztuk" << endl;
+	cout << "Twoj wybor: ";
+	opt = input<int>();
+	if(opt > 2 || opt < 1)
+	{
+		throw IncorrectNumber("Niepoprawna opcja!");
+	}
+	//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // na stdin zakolejkowany jest znak końca linii. Dzieki temu pomijam ten znak
 }
 
 Menu::~Menu()
@@ -48,5 +79,9 @@ void Menu::TakNieMenu()
 	cout << "1. Tak, biore" << endl;
 	cout << "2. Nie, zmienilem zdanie..." << endl;
 	cout << "Twoj wybor: ";
-	cin >> opt2;
+	opt2 = input<int>();
+	if(opt2 > 2 || opt2 < 1)
+	{
+		throw IncorrectNumber("Niepoprawna opcja z menu!");
+	}
 }

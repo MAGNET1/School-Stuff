@@ -1,4 +1,22 @@
 #include "Ksiazka_Przygodowa.h"
+#include "Wyjatki.h"
+
+template <typename T>
+T input()
+{
+	T d;
+	string line;
+	cin.clear();
+	cin.sync();
+	while(getline(cin, line))
+	{
+		stringstream sLine(line);
+		if (sLine >> d && sLine.eof())	break;
+		throw InputException("Nieprawidlowy typ danych. Sprobuj ponownie!");
+	}
+	return d;
+}
+
 
 Ksiazka_Przygodowa::Ksiazka_Przygodowa(string n, string a, int x, int i, float c, string o, string cz, string f)
 :Ksiazka(n, a, x, i, c)

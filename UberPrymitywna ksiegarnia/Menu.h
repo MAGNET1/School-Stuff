@@ -31,4 +31,5 @@ class Menu
 	void MainMenu(float);
 	void DodajKsiazkeMenu();
 	void TakNieMenu();
+	void SortujMenu();
 };

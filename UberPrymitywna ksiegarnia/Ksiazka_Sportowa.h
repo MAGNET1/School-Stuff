@@ -24,6 +24,8 @@ class Ksiazka_Sportowa : public Ksiazka
 	
 public:
 	Ksiazka_Sportowa(string n="", string a="", int x=0, int i=0, float c=0.0, string o="Brak danych", int y=0);
+	//kopiujacy
+	Ksiazka_Sportowa(Ksiazka_Sportowa &origin);
 	
 	int IleSztuk()
 	{

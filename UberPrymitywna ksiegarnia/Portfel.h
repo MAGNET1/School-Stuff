@@ -9,6 +9,8 @@
 #include <sstream>
 #include <fstream>
 
+#include "funcs.h"
+
 using namespace std;
 
 class Portfel

@@ -4,6 +4,25 @@
 #include "Ksiazka_Przygodowa.h"
 #include "Ksiazka_Psychologiczna.h"
 
+#include "Wyjatki.h"
+
+template <typename T>
+T input()
+{
+	T d;
+	string line;
+	cin.clear();
+	cin.sync();
+	while(getline(cin, line))
+	{
+		stringstream sLine(line);
+		if (sLine >> d && sLine.eof())	break;
+		throw InputException("Nieprawidlowy typ danych. Sprobuj ponownie!");
+	}
+	return d;
+}
+
+
 Ksiazka::Ksiazka(string n, string a, int x, int i, float c)
 {
 	nazwa = n;
@@ -26,27 +45,17 @@ void Ksiazka::Uzupelnij_Dane()
 	cout << endl <<"Podaj autora: ";
 	getline(cin, autor);
 	cout << endl << "Podaj ilosc stron: ";
-	cin >> ilosc_stron;
-	if(ilosc_stron < 1)
-	{
-		wyjatek= "Niepoprawna ilosc stron!";
-		throw wyjatek;
-	}
+	ilosc_stron = input<int>();
+	if(ilosc_stron < 0)	throw NegativeNumber("Liczba nie moze byc ujemna!");
+	
 	cout << endl << "Ilosc sztuk: ";
-	cin >> ilosc_sztuk;
-	if(ilosc_sztuk < 0)
-	{
-		wyjatek = "Niepoprawna ilosc sztuk!";
-		throw wyjatek;
-	}
+	ilosc_sztuk = input<int>();
+	if(ilosc_sztuk < 0)	throw NegativeNumber("Liczba nie moze byc ujemna!");
+	
 	cout << endl << "Podaj cene: ";
-	cin >> cena;
-	if(cena < 0)
-	{
-		wyjatek = "Niepoprawna cena!";
-		throw wyjatek;
-	}
-	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // na stdin zakolejkowany jest znak końca linii. Dzieki temu pomijam ten znak
+	cena = input<float>();
+	if(cena < 0)	throw NegativeNumber("Liczba nie moze byc ujemna!");
+	//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // na stdin zakolejkowany jest znak końca linii. Dzieki temu pomijam ten znak
 }
 
 void Ksiazka::SzybkieDodawanie(string line)
@@ -82,11 +91,11 @@ Ksiazka * Ksiazka::StworzKsiazke(int wybor)
 			break;
 		}
 	}
-	return new Ksiazka;
+	return new Ksiazka_Sportowa;
 }
 void Ksiazka::InformacjePodstawowe()
 {
-	cout << nazwa << " [" << autor << "] (" << ilosc_sztuk << ")";
+	cout << nazwa << " - " << cena << "zl " << " [" << autor << "] (" << ilosc_sztuk << ")";
 }
 
 void Ksiazka::Informacje()
@@ -98,7 +107,7 @@ void Ksiazka::Informacje()
 	cout << "Ilosc sztuk: " << ilosc_sztuk << endl;
 	cout << "Cena: " << cena << endl;
 }
-void Ksiazka::Usun()
-{
-	delete this;
-}
+//void Ksiazka::Usun()
+//{
+//	delete this;
+//}
