@@ -28,11 +28,10 @@ int main()
 	SetOperations hexKey; // Set operations (insert, search etc.)
 	TimeCounter counter; // time measurement
 	
-	// retrieves how many numbers and numbers themselves
-	//int randAmount = numberBase.CountLines("rand.txt");
 	int * randTab;
 	try
 	{
+		// retrieves numbers from file
 		randTab = numberBase.ReadFromFile("rand.txt");
 	}
 	catch(ErrorHandler &e)
@@ -42,7 +41,7 @@ int main()
 	}
 	
 	//perform
-	unsigned int i;
+	int i;
 	int resultCount;
 	double resTime;
 	cout << endl;
@@ -72,10 +71,9 @@ int main()
 		resultCount = hexKey.Delete(randTab, N[i]/2, FROM_FILE);
 		resTime = counter.Measure();
 		cout << "Usuwanie dla " << N[i] << " elementow losowo: " << resTime << "ms [" << resultCount << "]" << endl << endl;
+		
+		numBase.clear();
 	}
-	/*for (set<int>::iterator it=numBase.begin(); it!=numBase.end(); ++it)
-	    cout << ' ' << *it;
-	cout<<"\n";*/
 	
 	return 0;
 }
