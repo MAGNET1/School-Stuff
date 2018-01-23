@@ -74,6 +74,6 @@ int main()
 		
 		numBase.clear();
 	}
-	
+	delete[] randTab;
 	return 0;
 }
