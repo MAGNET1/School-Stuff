@@ -1,2 +1,2 @@
 # School-Stuff
-Umieszczam tutaj projekty na uczelnie i takie tam pierdoły
+Here i store my school projects and other weird things
