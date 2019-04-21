@@ -4,6 +4,7 @@ Legenda:
 >>> inne
 
 #NOTE: Aby uruchomiæ serwer, odpalamy skrypt silnik_main - korzysta on z pozosta³ych dwóch plików silnik_*
+#NOTE2: czasami zdarza siê, ¿e przy inicjalizacji planszy po pod³¹czeniu siê obydwu graczy coœ gdzieœ krêci siê wko³o w silnik_board i plansza nigdy nie zostaje wygenerowana. Wówczas zaleca siê machn¹æ taktyczny restart skryptu
 
 Szablony wiadomoœci JSON (wymagana kolejnoœæ):
 
