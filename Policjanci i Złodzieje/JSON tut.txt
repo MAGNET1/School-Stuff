@@ -3,6 +3,8 @@ Legenda:
 % - wiadomoœæ z serwera do clienta
 >>> inne
 
+#NOTE: Aby uruchomiæ serwer, odpalamy skrypt silnik_main - korzysta on z pozosta³ych dwóch plików silnik_*
+
 Szablony wiadomoœci JSON (wymagana kolejnoœæ):
 
 *1. Inicjalizacja z serwerem:
