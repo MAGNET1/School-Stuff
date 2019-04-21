@@ -1,0 +1,104 @@
+Legenda:
+* - wiadomoœæ wysy³ana przez clienta do serwera
+% - wiadomoœæ z serwera do clienta
+>>> inne
+
+Szablony wiadomoœci JSON (wymagana kolejnoœæ):
+
+*1. Inicjalizacja z serwerem:
+	{
+		"type": "init",
+		"team": mode, // dru¿yna (0 - z³odziej, 1 - policjanci. Wybierz m¹drze)
+		"name": nazwa // zwyk³y string z nazw¹ swojej dru¿yny
+	}
+
+
+%2. Wiadomoœæ zwrotna.
+	if coœ posz³o nie tak:
+		{
+			"status": "ERROR",
+			"message": "Do gry podlaczyli juz policjanci! Polaczenie przerwane" // wiadomoœæ mówi¹ca co posz³o nie tak
+		}
+	else if pod³¹czono do serwera prawid³owo!
+		{
+			"status": "OK",
+			"message": "Witaj, zlodzieju!"
+		}
+
+
+%3. Wiadomoœæ ze wszystkimi potrzebnymi informacjami
+	{
+		"status": "boardInit",
+		"board": Board, // s³ownik z koordynatami wszystkich obiektów pierwszej planszy
+		"boardSize": silnik_board.N, // rozmiar planszy. Domyœlnie 20, lecz UWAGA: nie ma tu uwzglêdnionych œcian! Faktyczny rozmiar planszy to N+2 x N+2
+		"amountOfPolicemans": silnik_board.policemanAmount, // iloœæ policjantów. Domyœlnie: 5
+		"clockMaxTicks": silnik_board.T, // ile cykli zegara maksymalnie mo¿e trwaæ gra (domyœlnie: 100)
+		"clockSingleRoundTicks": silnik_board.k, // ile cykli trwa jedna "faza" gry - czyli po ilu rundach rozsy³ane s¹ plansze do graczy i oczekiwane s¹ kolejne ruchy. Domyœlnie 5
+		"timeLimit": silnik_board.timeLimit, // limit czasowy na przes³anie ruchów przez gracza. Domyœlnie 500ms
+		"gateAmount": silnik_board.gateAmount, // iloœæ bramek. Domyœlnie 2
+		"gateWidth": silnik_board.gateWidth, // szerokoœæ bramek. Domyœlnie 2
+		"gateMoveChance": silnik_board.gateMoveChance, // szansa bramki na poruszenie siê. Domyœlnie 50%
+		"gateDirectionReversalChance": silnik_board.gateDirectionReversalChance, // szansa na zmianê kierunku poruszania siê brami. Domyœlnie 1%
+		"obstacleAmount": silnik_board.obstacleAmount, // iloœæ przeszkód na plansze. Domyœlnie 4
+		"obstacleWidth": silnik_board.obstacleWidth, // szerokoœæ przeszkód. Domyœlnie 4
+		"obstacleMoveChance": silnik_board.obstacleMoveChance, // szansa na poruszenie siê przeszkody. Domyœlnie 75%
+		"obstacleDirectionReversalChance": silnik_board.obstacleDirectionReversalChance // szansa na zmianê kierunku przeszkody. Domyœlnie 5%
+  }
+  
+/// w tym miejscu masz tyle czasu ile tylko potrzebujesz na wys³anie pierwszej sekwencji ruchów - brak ogranicznika czasowego w pierwszej turze
+  
+*4. Ruch gracza
+	if gracz == Zlodziej
+		{
+            'type': 'playerMove',
+            'sequence': [1,2,3,4,0] // k ruchów. Legenda: 1 - góra, 2 - prawo, 3 - dó³, 4 - lewo, 0 - ruch pusty
+        }
+	
+	else if gracz == Policjanci
+		// numeracja policjanów powinna zaczynaæ siê od 1. Ka¿dy posiada swój unikalny identyfikator, zaczynaj¹cy siê od liczby 5 w górê. U³o¿enie identyfikatorów ('ID') jest dowolne (np. mo¿na wrzuciæ policjanta o ID 8 do s³ownika 'policeman4' - oczywiœcie o ile spe³nione zostan¹ nakreœlone warunki)
+		{
+			'type': 'playerMove',
+			'policeman1': {
+				'ID': 9,
+				'sequence': [1,2,3,4,0]
+			},
+			///
+			'policemanX': { // X = iloœæ policjantów
+				'ID': 5,
+				'sequence': [4,3,2,1,4]
+			}
+        }
+
+if gra w toku:
+	%5. Nowy stan planszy wraz z histori¹ ostatnich k stanów
+		{
+		  'status': 'inProgress',
+		  'board0': Board // 0, czyli aktualna plansza
+		  'board1': Board // 1, czyli przedostatni stan
+		  ///
+		  'boardX': Board // X = k-1
+		}
+else
+	%6. Game Over!
+	{
+        'status': 'gameOver',
+        'winner': 1, // identyfikator dru¿yny (jak przy inicjalizacji)
+        'score': info['score'] // punktowy wynik
+    }
+	
+	
+>>> S³ownik stanu planszy
+	{
+		'gatesCoords': array[][][], // koordynaty bram ( np. dla dwóch bram o szerokoœci 2: [[[0, 21], [1, 21]], [[13, 21], [14, 21]]] )
+		'obstaclesCoords': array[][][], // koordynaty przeszkód ( np. dla 4 przeszkód o szerokoœci 4: [[[13, 1], [14, 1], [15, 1], [16, 1]], [[2, 3], [2, 4], [2, 5], [2, 6]], [[4, 9], [4, 10], [4, 11], [4, 12]], [[14, 2], [14, 3], [14, 4], [14, 5]]]
+		'thiefCoords': array[][] // kordynaty z³odzieja ( np. [12,3] )
+		'policeman1': {
+			'ID': int, // identyfikator (jak w punkcie no. 4)
+			'coords': array[][] // pozycja ( np. [3,4] )
+		}
+		///
+		'policemanX': { // X = iloœæ policjantów
+			'ID': int, // identyfikator (jak w punkcie no. 4)
+			'coords': array[][] // pozycja ( np. [3,4] )
+		}
+	  }
